@@ -19,7 +19,7 @@
             for (int i = 1; i <= inputNumber; i++)
             {
                 Console.WriteLine($"Thread name: {counter++} => {i}");
-                Thread.Sleep(500);
+                Thread.Sleep(600);
             }
             Console.WriteLine("Thread is complete!");
         }
