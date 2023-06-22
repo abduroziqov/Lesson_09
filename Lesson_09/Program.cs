@@ -1,27 +1,69 @@
-﻿namespace Lesson_09
+﻿using System.IO;
+
+namespace Lesson_09
 {
     internal class Program
     {
         static void Main(string[] args)
-        {
-            Thread thread = new Thread(() =>  DisplayNumbers());
-
-            thread.Start();
-        }
-        public static void DisplayNumbers()
-        {
-            Console.Write("Enter a number => ");
-
-            int counter = 1;
-
-            double inputNumber = double.Parse(Console.ReadLine());
-
-            for (int i = 1; i <= inputNumber; i++)
+        {    
+            while (true)
             {
-                Console.WriteLine($"Thread name: {counter++} => {i}");
-                Thread.Sleep(600);
+                Console.Write("Enter a number => ");
+                double inputNumber = double.Parse(Console.ReadLine());
+
+                if(inputNumber == 0) break;
+                Thread thread = new Thread(() => SortOddNumbers(inputNumber, "Odd number", Directory.GetCurrentDirectory()));
+                Thread thread1 = new Thread(() => SortEvenNumbers(inputNumber, "Even number", Directory.GetCurrentDirectory()));
+
+                thread.Start();
+                thread1.Start();
             }
-            Console.WriteLine("Thread is complete!");
+        }
+        public static void SortOddNumbers(double inputNumber, string name,string path)
+        {
+            path = Directory.GetCurrentDirectory() + inputNumber +  "OddNum.txt";
+            double counter = 0;
+
+            if (File.Exists(path));
+            else
+            {
+                File.Create(path).Close();
+                using (StreamWriter txtWriter = new StreamWriter(path))
+                {
+                    for (double i = 1; i <= inputNumber; i += 2)
+                    {
+                        Console.WriteLine($"Odd number => {counter++} : {i}");
+                        Thread.Sleep(1000);
+                        txtWriter.WriteLine($"Odd number => {counter} : {i}");
+                    }
+                }
+                Console.WriteLine("Thread #1 is complete!");
+                Console.WriteLine("File has been succesfully created.");
+            } 
+        }
+        public static void SortEvenNumbers(double inputNumber,string name,string path)
+        {
+            path = Directory.GetCurrentDirectory() + inputNumber + "EvenNum.txt";
+            double counter = 0;
+
+            if (File.Exists(path))
+            {
+                Console.WriteLine("This file is already available in this folder.");
+            }
+            else
+            {
+                File.Create(path).Close();
+                using (StreamWriter txtWriter = new StreamWriter(path))
+                {
+                    for (double i = 2; i <= inputNumber; i += 2)
+                    {
+                        Console.WriteLine($"Even number => {counter++} : {i}");
+                        Thread.Sleep(1000);
+                        txtWriter.WriteLine($"Even number => {counter} : {i}");
+                    }
+                }
+                Console.WriteLine("Thread #2 is complete!");
+            }
         }
     }
 }
